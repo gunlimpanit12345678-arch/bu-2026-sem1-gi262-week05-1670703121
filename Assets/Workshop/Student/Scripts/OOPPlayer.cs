@@ -46,6 +46,17 @@ namespace Solution
             if (inventory.HasItem("FireStorm",1))
             {
                 //stundent exercise: use FireStorm to attack 3 lower energy enemies on map
+                inventory.UseItem("FireStrom", 1);
+                OOPEnemy[] enemies = SortEnemiesByRemainningEnergy1();
+                int count = 3;
+                if (count > enemies.Length)
+                {
+                    count = enemies.Length;
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    enemies[i].TakeDamage(10); 
+                }
             }
             else
             {
@@ -56,7 +67,16 @@ namespace Solution
         {
             var enemies = mapGenerator.GetEnemies();
             //stundent exercise: sort enemies by remainning energy
-
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                int minIndex = i;
+                for (int j = i; j < enemies.Length; j++)
+                {
+                    if (enemies[j].energy < enemies[minIndex].energy)
+                    { minIndex = j; }
+                }
+                (enemies[i], enemies[minIndex]) = (enemies[minIndex], enemies[i]);
+            }
             return enemies;
         }
 
@@ -64,7 +84,9 @@ namespace Solution
         {
             var enemies = mapGenerator.GetEnemies();
             //stundent exercise: sort enemies by remainning energy
+            Array.Sort(enemies,(a,b)=> a.energy.CompareTo(b.energy));
 
+           
             return enemies;
         }
         public void Attack(OOPEnemy _enemy)
